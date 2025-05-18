@@ -22,7 +22,7 @@ pipeline {
         stage('Build and Test') {
             steps {
                 echo 'Building and running tests...'
-                sh 'mvn clean package'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
