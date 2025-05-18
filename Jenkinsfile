@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         APP_NAME = 'shopping-cart'
-        DOCKER_IMAGE = "mydockerhubuser/${APP_NAME}:latest"
+        DOCKER_IMAGE = "ahmedsayed7/${APP_NAME}:latest"
     }
 
     stages {
