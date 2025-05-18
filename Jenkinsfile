@@ -6,35 +6,47 @@ pipeline {
         jdk 'JDK17'
     }
 
+    environment {
+        APP_NAME = 'shopping-cart'
+        DOCKER_IMAGE = "mydockerhubuser/${APP_NAME}:latest"
+    }
+
     stages {
         stage('Clone Code') {
             steps {
-                echo 'Cloning the GitHub repository...'
+                echo 'Cloning repository...'
                 git branch: 'main', url: 'https://github.com/AhmedSayed7/Ekart.git'
             }
         }
 
-        stage('Build Project') {
+        stage('Build and Test') {
             steps {
-                echo 'Building the project using Maven...'
-                sh 'mvn clean package -Dmaven.test.failure.ignore=true'
+                echo 'Building and running tests...'
+                sh 'mvn clean package'
             }
         }
 
-        stage('Save JAR File') {
+        stage('Archive JAR') {
             steps {
-                echo 'Saving the generated JAR file...'
+                echo 'Saving JAR file...'
                 archiveArtifacts artifacts: 'target/*.jar'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker image...'
+                sh 'docker build -t $DOCKER_IMAGE -f docker/Dockerfile .'
             }
         }
     }
 
     post {
         success {
-            echo '✅ Build completed successfully!'
+            echo '✅ Build and Docker image created successfully.'
         }
         failure {
-            echo '❌ Build failed. Please check the logs.'
+            echo '❌ Something went wrong during the pipeline.'
         }
     }
 }
